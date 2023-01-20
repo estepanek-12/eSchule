@@ -1,185 +1,69 @@
-# Line-Tracking
+# Robocar LineTracking and induvidual steps
 
-```python
-# ___   ___  ___  _   _  ___   ___   ____ ___  ____
+## mit raspberrypi
 
-# / _ \ /___)/ _ \| | | |/ _ \ / _ \ / ___) _ \|    \
+Verfasser: **Eva Stepanek**
+Datum: **11.01.2023**
 
-#| |_| |___ | |_| | |_| | |_| | |_| ( (__| |_| | | | |
+## 1. Einführung
 
-# \___/(___/ \___/ \__  |\___/ \___(_)____)___/|_|_|_|
+Ich habe den raspberry schon länger und es hat mir sehr Spaß gemacht
+mich mit dem Robo Car und dem Pi zu beschäftigen, deshalb wollte ich meine Arbeit 
+mit diesem Projekt erweitern.
 
-# (____/
+## 2. Projektbeschreibung
 
-# Osoyoo Raspberry Pi Robot Car Line Tracking auto driving
+Bei diesem Projekt fährt ein Roboter Car in Steuerung vom raspberry pi 3B+ bestimmte Aufgaben.
+zuerst einer schwarzen dicken Linie nach und führt auch eigene Befehle aus. 
 
-# tutorial url: https://osoyoo.com/?p=32082
+## 3. Theorie
 
-from __future__ import division
-import time
+Ein raspberry Pi ist ein auf Linux basierender mini Computer. Er wird für die verschiedensten 
+Dinge verwendet. Beispiele dafür sind Bewässerung steuern, Haushalt steuern, Roboter steuern.
+Der Pi hat keine Eigene Visuelle Oberfläche, man muss ihn mit einem Bildschirm und Tastatur verbinden.
 
-# Import the PCA9685 module.
+## 4. Arbeitsschritte
 
-import Adafruit_PCA9685
-import RPi.GPIO as GPIO
+* Robo Car zusammenbauen laut anleitung youtube Video
 
-# Initialise the PCA9685 using the default address (0x40).
+* Installation VNC Viewer
 
-pwm = Adafruit_PCA9685.PCA9685()
+* Einrichten den Pi am Laptop mit Wlan
 
-# Alternatively specify a different address and/or bus:
+* Linux version pi os
 
-#pwm = Adafruit_PCA9685.PCA9685(address=0x41, busnum=2)
-high_speed = 2000  # Max pulse length out of 4096
-mid_speed = 1000  # Max pulse length out of 4096
-low_speed = 500  # Max pulse length out of 4096
-short_delay=0.1
-long_delay=0.2
-extra_long_delay=0.3
+* Python Code downloaden und anpassen
 
-# Set frequency to 60hz, good for servos.
+* optische Sensoren für das Line Tracking installiert und verdratet
 
-pwm.set_pwm_freq(60)
-GPIO.setmode(GPIO.BCM) # GPIO number  in BCM mode
-GPIO.setwarnings(False)
-#define L298N(Model-Pi motor drive board) GPIO pins
-IN1 = 23  #left motor direction pin
-IN2 = 24  #left motor direction pin
-IN3 = 27  #right motor direction pin
-IN4 = 22  #right motor direction pin
-ENA = 0  #left motor speed PCA9685 port 0
-ENB = 1  #right motor speed PCA9685 port 1
-sensor1= 5 # No.1 sensor from far left
-sensor2= 6 # No.2 sensor from left
-sensor3= 13 # middle sensor
-sensor4= 19 # No.2 sensor from right
-sensor5= 26 #No.1 sensor from far  right
-sts1=0
-sts2=0
-sts3=0
-sts4=0
-sts5=0
+* getestet
 
-# Define motor control  pins as output
+* Wlan auf mobilen Hotspot geändert
 
-GPIO.setup(IN1, GPIO.OUT)   
-GPIO.setup(IN2, GPIO.OUT) 
-GPIO.setup(IN3, GPIO.OUT)   
-GPIO.setup(IN4, GPIO.OUT) 
-GPIO.setup(sensor1, GPIO.IN)   
-GPIO.setup(sensor2, GPIO.IN)
-GPIO.setup(sensor3, GPIO.IN)   
-GPIO.setup(sensor4, GPIO.IN)
-GPIO.setup(sensor5, GPIO.IN)  
+* neue IP Adresse gesucht da es ja ein neues Netz ist
 
-def changespeed(speed_left,speed_right):
-    pwm.set_pwm(ENA, 0, speed_left)
-    pwm.set_pwm(ENB, 0, speed_right)
+### Bilder
 
-def stopcar():
-    GPIO.output(IN1, GPIO.LOW)
-    GPIO.output(IN2, GPIO.LOW)
-    GPIO.output(IN3, GPIO.LOW)
-    GPIO.output(IN4, GPIO.LOW)
-    changespeed(0,0)
-stopcar()
+![Alt text](1.jpg)
+![Alt text](2.jpg)
+![Alt text](3.jpg)
+![Alt text](4.jpg)
+![Alt text](5.jpg)
+![Alt text](6.jpg)
 
-def backward(speed_left,speed_right):
-    GPIO.output(IN1, GPIO.HIGH)
-    GPIO.output(IN2, GPIO.LOW)
-    GPIO.output(IN3, GPIO.HIGH)
-    GPIO.output(IN4, GPIO.LOW)
-    changespeed(speed_left,speed_right)
+### Text
 
-    #following two lines can be removed if you want car make continuous movement without pause
-    #time.sleep(short_delay) 
-    #stopcar()
+OSOYOO Raspberry Pi V2.0 car
+Video auf der Homepage Lession 1 und Lession 2
 
-'def forward(speed_left,speed_right):
-    GPIO.output(IN2, GPIO.HIGH)
-    GPIO.output(IN1, GPIO.LOW)
-    GPIO.output(IN4, GPIO.HIGH)
-    GPIO.output(IN3, GPIO.LOW)
-    changespeed(speed_left,speed_right)
-    #following two lines can be removed if you want car make continuous movement without pause
-    #time.sleep(short_delay) 
-    #stopcar()
+## 5. Zusammenfassung
 
-def turnRight(speed_left,speed_right):
-    GPIO.output(IN1, GPIO.LOW)
-    GPIO.output(IN2, GPIO.HIGH)
-    GPIO.output(IN3, GPIO.HIGH)
-    GPIO.output(IN4, GPIO.LOW)
-    changespeed(speed_left,speed_right)
-    #following two lines can be removed if you want car make continuous movement without pause
-    #time.sleep(short_delay) 
-    #stopcar()
+Von dem Laptop aus lässt sich durch den Raspberry das Robo Car beliebig steuern. Eine Version ist das Linetracking, hier 
+muss darauf geachtet werden das die Geschwindigkeit nicht so hoch ist, denn dann fällt das Auto oft in den Kurven hinaus.
+Dies ist alles durch die unten angebrachten Sensoen möglich. Ein Problem gab es auch mit dem finden der IP Adresse übers Handy.
+Man muss dann einfach die möglichen Adressen pingen und schauen was sie sind.
 
-def turnLeft(speed_left,speed_right):
-    GPIO.output(IN1, GPIO.HIGH)
-    GPIO.output(IN2, GPIO.LOW)
-    GPIO.output(IN3, GPIO.LOW)
-    GPIO.output(IN4, GPIO.HIGH)
-    changespeed(speed_left,speed_right)    
-    #following two lines can be removed if you want car make continuous movement without pause
-    #time.sleep(short_delay) 
-    #stopcar()
-print('Moving servo on channel 0, press Ctrl-C to quit...')
+## 6. Quellen
 
-try:
-    while True :
-
-        sts1 =  0 if GPIO.input(sensor1) else 1
-        sts2 =  0 if GPIO.input(sensor2) else 1
-        sts3 =  0 if GPIO.input(sensor3) else 1
-        sts4 =  0 if GPIO.input(sensor4) else 1
-        sts5 =  0 if GPIO.input(sensor5) else 1
-
-
-        sensorval = ''.join([str(sts1), str(sts2), str(sts3), str(sts4), str(sts5)])
-        print(sensorval)
-
-        if  sensorval=="10000"  or sensorval=="01000" or sensorval=="11000":
-            turnLeft(low_speed,mid_speed)   #The black line left, sharp left turn
-            #time.sleep(long_delay)  
-            #stopcar()
-            #time.sleep(short_delay) 
-
-        if  sensorval=="01100"  or sensorval=="11100"  or sensorval=="11110" :
-            turnLeft(0,high_speed)   #The black line left,  left turn
-            #time.sleep(long_delay)  
-            #stopcar()
-            #time.sleep(short_delay)     
-
-        if sensorval=="00001"  or sensorval=="00010" or sensorval=="00011":
-            turnRight(mid_speed,low_speed) #The black line is  on the Left of the car, need  Left turn 
-            #time.sleep(long_delay)  
-            #stopcar()
-            #time.sleep(short_delay)    
-
-        if  sensorval=="00110" or  sensorval=="00111" or sensorval=="01111":
-            forward(mid_speed,low_speed) #slight right turn
-            #time.sleep(long_delay)  
-            #stopcar()
-            #time.sleep(short_delay)    
-
-        if  sensorval=="00100"  or sensorval=="01110":
-            forward(mid_speed,mid_speed) #slight right turn
-            #time.sleep(long_delay)  
-            #stopcar()
-            #time.sleep(short_delay) 
-
-
-        if sensorval=="11111" :
-            stopcar() #The car front touch stop line, need stop
-
-except KeyboardInterrupt:
-
-# User pressed CTRL-C
-
-# Reset GPIO settings
-
-```python
-  pwm.set_pwm(15, 0, 0)
-  GPIO.cleanup()
-```
+https://osoyoo.com/2020/08/01/osoyoo-raspberry-pi-v2-0-car-lesson-2-line-tracking/
+https://de.wikipedia.org/wiki/Prozessorarchitektur
